@@ -2,15 +2,19 @@ package visual;
 
 import algo.BTNode;
 import algo.BTree;
+import javafx.animation.FillTransition;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class BTreePane extends Pane {
 	private BTree<Integer> bTree;
 	private double originalX, originalY;
+	
+	// TODO: make node size relate to pane's size
 	private final int fontSize = 12;
 	private final int rectangleWidth = 40;
 	private final int rowSpace = 60;
@@ -83,22 +87,18 @@ public class BTreePane extends Pane {
 		}
 	}
 
-	/*
-	 * Draw Animation
-	 */
-
-	// TODO: Can't handle animtion
-
 	public void searchPathColoring(BTree<Integer> bTree, int key) throws Exception {
 		updatePane(bTree);
 		if (!bTree.isEmpty()) {
 			BTNode<Integer> currentNode = bTree.getRoot();
 			double x = originalX, y = originalY;
-
+			int delay = 0;
 			while (!currentNode.equals(bTree.nullBTNode)) {
 				int i = 0;
 				while (i < currentNode.getSize()) {
-					DrawNode(currentNode.getKey(i).toString(), x, y, Color.DARKRED);
+//					DrawNode(currentNode.getKey(i).toString(), x, y, Color.RED);
+					makeNodeAnimation(currentNode.getKey(i).toString(), x, y, delay);
+					delay++;
 					// key can tim
 					if (currentNode.getKey(i).equals(key)) {
 						return;
@@ -132,7 +132,33 @@ public class BTreePane extends Pane {
 					currentNode = currentNode.getChild(currentNode.getSize());
 				}
 			}
-			throw new Exception("Not in the tree!");
 		}
+		throw new Exception("Not in the tree!");
 	}
+
+	/*
+	 * Draw Animation
+	 */
+
+	// TODO: refactor
+	private void makeNodeAnimation(String s, double x, double y, int delay) {
+		// Draw a node
+		Rectangle rect = new Rectangle(x, y, rectangleWidth, 2 * fontSize);
+		rect.setFill(Color.LIGHTSEAGREEN);
+		rect.setStroke(Color.BLACK);
+		this.getChildren().addAll(rect, new Text(x + 15, y + 15, s));
+		
+		// make fill transition
+		FillTransition fill = new FillTransition();
+		
+		fill.setAutoReverse(false);
+		fill.setCycleCount(1);
+		fill.setDelay(Duration.seconds(delay));
+		fill.setDuration(Duration.seconds(1));
+		fill.setFromValue(Color.LIGHTSEAGREEN);
+		fill.setToValue(Color.RED);
+		fill.setShape(rect);  
+		fill.play(); 
+	}
+
 }

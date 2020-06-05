@@ -45,13 +45,15 @@ public class BTWindow extends BorderPane {
 		Button insertButton = new Button("Insert");
 		Button deleteButton = new Button("Delete");
 		Button searchButton = new Button("Search");
+		Button resetButton = new Button("Reset");
+		resetButton.setStyle("-fx-base: red;");
 		Label nullLabel = new Label();
 		nullLabel.setPrefWidth(30);
 
 		hBox.getChildren().addAll(new Label("Enter a number: "), keyText, insertButton, deleteButton, searchButton,
-				nullLabel, previousButton, nextButton);
+				resetButton, nullLabel, previousButton, nextButton);
 		hBox.setAlignment(Pos.CENTER);
-		checkValid();
+		checkVisible();
 
 		// Create TreePane in center
 		// TODO: chinh lai x, y theo size window
@@ -63,11 +65,12 @@ public class BTWindow extends BorderPane {
 		insertButton.setOnMouseClicked(e -> insertValue());
 		deleteButton.setOnMouseClicked(e -> deleteValue());
 		searchButton.setOnMouseClicked(e -> searchValue());
+		resetButton.setOnMouseClicked(e -> reset());
 		previousButton.setOnMouseClicked(e -> goPrevious());
 		nextButton.setOnMouseClicked(e -> goNext());
 	}
-	
-	private void checkValid() {
+
+	private void checkVisible() {
 		if (index > 0 && index < bTreeLinkedList.size() - 1) {
 			previousButton.setVisible(true);
 			nextButton.setVisible(true);
@@ -83,32 +86,18 @@ public class BTWindow extends BorderPane {
 		}
 	}
 
-//	private void deleteList() {
-//		for (int i = bTreeLinkedList.size() - 1; i >= index; i--) {
-//			bTreeLinkedList.removeLast();
-//		}
-//	}
-
 	private void insertValue() {
 		try {
 			key = Integer.parseInt(keyText.getText());
 			keyText.setText("");
-//			if (index < bTreeLinkedList.size() - 1) {
-//				deleteList();
-//				bTreeLinkedList.add(CloneUtils.clone(bTree));
-//			}
-//			btPane.insert(bTree, key);
 			bTree.setStepTrees(new LinkedList<BTree<Integer>>());
 
 			bTree.insert(key);
 
 			index = 0;
 			bTreeLinkedList = bTree.getStepTrees();
-//			bTreeLinkedList.add(CloneUtils.clone(bTree));
-//			index = bTreeLinkedList.size() - 1;
-//			checkValid();
 			btPane.updatePane(bTreeLinkedList.get(0));
-			checkValid();
+			checkVisible();
 		} catch (NumberFormatException e) {
 			Alert alert = new Alert(Alert.AlertType.WARNING, "Illegal input data!", ButtonType.OK);
 			alert.show();
@@ -119,10 +108,6 @@ public class BTWindow extends BorderPane {
 		try {
 			key = Integer.parseInt(keyText.getText());
 			keyText.setText("");
-//			if (index < bTreeLinkedList.size() - 1) {
-//				deleteList();
-//				bTreeLinkedList.add(CloneUtils.clone(bTree));
-//			}
 			if (bTree.getNode(key) == bTree.nullBTNode) {
 				throw new Exception("Not in the tree!");
 			}
@@ -132,12 +117,8 @@ public class BTWindow extends BorderPane {
 
 			index = 0;
 			bTreeLinkedList = bTree.getStepTrees();
-//			bTreeLinkedList.add(CloneUtils.clone(bTree));
-//			index = bTreeLinkedList.size() - 1;
-//			checkValid();
-//			btPane.updatePane(bTree);
 			btPane.updatePane(bTreeLinkedList.get(0));
-			checkValid();
+			checkVisible();
 		} catch (NumberFormatException e) {
 			Alert alert = new Alert(Alert.AlertType.WARNING, "Illegal input data!", ButtonType.OK);
 			alert.show();
@@ -153,14 +134,7 @@ public class BTWindow extends BorderPane {
 			keyText.setText("");
 
 			btPane.searchPathColoring(bTree, key);
-//			bTree.setStepTrees(new LinkedList<BTree<Integer>>());
 
-//			bTree.insert(key);
-
-//			index = 0;
-//			bTreeLinkedList = bTree.getStepTrees();
-//			btPane.updatePane(bTreeLinkedList.get(0));
-//			checkValid();
 		} catch (NumberFormatException e) {
 			Alert alert = new Alert(Alert.AlertType.WARNING, "Illegal input data!", ButtonType.OK);
 			alert.show();
@@ -172,27 +146,31 @@ public class BTWindow extends BorderPane {
 
 	private void goPrevious() {
 		if (index > 0) {
-//			bTree = bTreeLinkedList.get(index - 1);
-//			btPane.updatePane(bTree);
-
 			index--;
 			btPane.updatePane(bTreeLinkedList.get(index));
 
-			checkValid();
+			checkVisible();
 		}
 	}
 
 	private void goNext() {
 		if (index < bTreeLinkedList.size() - 1) {
-//			bTree = bTreeLinkedList.get(index + 1);
-//			btPane.updatePane(bTree);
-
 			index++;
 			System.out.println("index: " + index + " - size: " + bTreeLinkedList.size());
 			btPane.updatePane(bTreeLinkedList.get(index));
 
-			checkValid();
+			checkVisible();
 		}
+	}
+
+	private void reset() {
+		keyText.setText("");
+
+		bTree.setRoot(null);
+		index = 0;
+		bTreeLinkedList.clear();
+		btPane.updatePane(bTree);
+		checkVisible();
 	}
 
 }
