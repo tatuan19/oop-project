@@ -11,9 +11,9 @@ public class BTree<K extends Comparable<K>> implements Serializable {
 	private int order, index, treeSize;
 	private final int halfNumber;
 	public final BTNode<K> nullBTNode = new BTNode<K>();
-	
+
 	private LinkedList<BTree<K>> stepTrees = new LinkedList<BTree<K>>();
-	private LinkedList<String> stepMess = new LinkedList<String>();
+//	private LinkedList<String> stepMess = new LinkedList<String>();
 
 	/**
 	 *
@@ -78,13 +78,13 @@ public class BTree<K extends Comparable<K>> implements Serializable {
 		this.stepTrees = stepTrees;
 	}
 
-	public LinkedList<String> getStepMess() {
-		return stepMess;
-	}
+//	public LinkedList<String> getStepMess() {
+//		return stepMess;
+//	}
 
-	public void setStepMess(LinkedList<String> stepMess) {
-		this.stepMess = stepMess;
-	}
+//	public void setStepMess(LinkedList<String> stepMess) {
+//		this.stepMess = stepMess;
+//	}
 
 	/**
 	 * @return height of tree
@@ -141,7 +141,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
 	}
 
 	/**
-	 * @param key     , the key
+	 * @param key      , the key
 	 * @param fullNode , full node
 	 * @return half of the full node after inserting inside
 	 */
@@ -159,9 +159,9 @@ public class BTree<K extends Comparable<K>> implements Serializable {
 			fullNode.addKey(fullNodeSize, key);
 
 		System.out.println("Insert key vao vi tri thich hop");
-		stepMess.add("Insert " + key + " vao vi tri thich hop");
+//		stepMess.add("Insert " + key + " vao vi tri thich hop");
 		stepTrees.add(CloneUtils.clone(this));
-		
+
 		return getHalfKeys(fullNode);
 	}
 
@@ -249,9 +249,9 @@ public class BTree<K extends Comparable<K>> implements Serializable {
 		newNode.setFather(currentNode);
 		setSplitFatherNode(originalNode);
 		setSplitFatherNode(newNode);
-		
+
 		System.out.println("Dua key o chinh giua len");
-		stepMess.add("Dua key o chinh giua len");
+//		stepMess.add("Dua key o chinh giua len");
 		stepTrees.add(CloneUtils.clone(this));
 	}
 
@@ -268,9 +268,9 @@ public class BTree<K extends Comparable<K>> implements Serializable {
 			root.setFather(nullBTNode);
 			root.addChild(0, nullBTNode);
 			root.addChild(1, nullBTNode);
-			
+
 			System.out.println("Insert root");
-stepMess.add("Tao root");
+//			stepMess.add("Tao root");
 			stepTrees.add(CloneUtils.clone(this));
 			return;
 		}
@@ -278,7 +278,7 @@ stepMess.add("Tao root");
 		BTNode<K> currentNode = root;
 
 		// If tree is not empty
-		
+
 		// Tim den vi tri de insert key
 		while (!currentNode.isLastInternalNode()) {
 			int i = 0;
@@ -306,9 +306,9 @@ stepMess.add("Tao root");
 					currentNode.addKey(i, key);
 					currentNode.addChild(currentNode.getSize(), nullBTNode);
 					treeSize++;
-					
+
 					System.out.println("Insert non full");
-					stepMess.add("Insert " + key + " vao vi tri thich hop");
+//					stepMess.add("Insert " + key + " vao vi tri thich hop");
 					stepTrees.add(CloneUtils.clone(this));
 					return;
 				} else {
@@ -319,9 +319,9 @@ stepMess.add("Tao root");
 			currentNode.addKey(currentNode.getSize(), key);
 			currentNode.addChild(currentNode.getSize(), nullBTNode);
 			treeSize++;
-			
+
 			System.out.println("Insert non full v2");
-			stepMess.add("Insert " + key + " vao vi tri thich hop");
+//			stepMess.add("Insert " + key + " vao vi tri thich hop");
 			stepTrees.add(CloneUtils.clone(this));
 		} else {
 			// If node is full
@@ -333,7 +333,7 @@ stepMess.add("Tao root");
 				currentNode.removeChild(0);
 			}
 			newChildNode.addChild(halfNumber, nullBTNode);
-			
+
 			// Lay 1 nua con lai, nhu vay, current node se chi con lai middle key
 			// Dua n len 1 muc (dua len lam cha)
 			BTNode<K> originalFatherNode = getRestOfHalfKeys(currentNode);
@@ -342,11 +342,11 @@ stepMess.add("Tao root");
 			originalFatherNode.setFather(currentNode);
 			newChildNode.setFather(currentNode);
 			treeSize++;
-			
+
 			System.out.println("Dua key o chinh giua len");
-			stepMess.add("Dua key o chinh giua len");
+//			stepMess.add("Dua key o chinh giua len");
 			stepTrees.add(CloneUtils.clone(this));
-			
+
 			// Neu tren current node con node cap cao hon
 			// va node dua len tren ...
 			if (!currentNode.getFather().equals(nullBTNode)) {
@@ -355,11 +355,11 @@ stepMess.add("Tao root");
 					if (currentNode.isOverflow() || flag) {
 						mergeWithFatherNode(currentNode);
 						currentNode = currentNode.getFather();
-						
+
 						System.out.println("Insert key duoc dua len vao vi tri thich hop");
-						stepMess.add("Insert key duoc dua len vao vi tri thich hop");
+//						stepMess.add("Insert key duoc dua len vao vi tri thich hop");
 						stepTrees.add(CloneUtils.clone(this));
-						
+
 						// Neu lai full thi lap lai hanh dong ban nay
 						if (currentNode.isOverflow()) {
 							processOverflow(currentNode);
@@ -423,9 +423,9 @@ stepMess.add("Tao root");
 				}
 //				System.out.println("BA1");
 				System.out.println("Case 2a:");
-				stepMess.add(" ");
+//				stepMess.add(" ");
 				stepTrees.add(CloneUtils.clone(this));
-				
+
 			} else {
 				pair = fatherNode.getKey(nodeIndex - 1);
 				node.addKey(0, pair);
@@ -440,7 +440,7 @@ stepMess.add("Tao root");
 				}
 //				System.out.println("BA2");
 				System.out.println("Case 2a:");
-				stepMess.add(" ");
+//				stepMess.add(" ");
 				stepTrees.add(CloneUtils.clone(this));
 			}
 			return node;
@@ -464,7 +464,7 @@ stepMess.add("Tao root");
 				}
 				// Case 2b.1
 				System.out.println("Case 2b: Merging");
-				stepMess.add("Merging");
+//				stepMess.add("Merging");
 				stepTrees.add(CloneUtils.clone(this));
 			} else {
 				currentNode.addKey(currentNode.getSize(), fatherNode.getKey(nodeIndex - 1));
@@ -486,7 +486,7 @@ stepMess.add("Tao root");
 				}
 				// Case 2b.2
 				System.out.println("Case 2b: Merging");
-				stepMess.add("Merging");
+//				stepMess.add("Merging");
 				stepTrees.add(CloneUtils.clone(this));
 			}
 			return fatherNode;
@@ -502,7 +502,7 @@ stepMess.add("Tao root");
 		while (!currentNode.isLastInternalNode()) {
 			currentNode = currentNode.getChild(0);
 		}
-		
+
 		if (currentNode.getSize() - 1 < halfNumber) {
 			// Thay the bang con trai gan nhat (lon nhat)
 			currentNode = node.getChild(index);
@@ -517,7 +517,7 @@ stepMess.add("Tao root");
 			index = currentNode.getSize() - 1;
 			// Case 3a
 			System.out.println("Case 3a: Thay the bang con trai gan nhat (lon nhat)");
-			stepMess.add("Thay the bang con trai gan nhat (lon nhat)");
+//			stepMess.add("Thay the bang con trai gan nhat (lon nhat)");
 			stepTrees.add(CloneUtils.clone(this));
 		} else {
 			// Thay the bang con phai gan nhat (nho nhat)
@@ -528,7 +528,7 @@ stepMess.add("Tao root");
 			index = 0;
 			// Case 3b
 			System.out.println("Case 3b: Thay the bang con phai gan nhat (nho nhat)");
-			stepMess.add("Thay the bang con phai gan nhat (nho nhat)");
+//			stepMess.add("Thay the bang con phai gan nhat (nho nhat)");
 			stepTrees.add(CloneUtils.clone(this));
 		}
 		return currentNode;
@@ -537,15 +537,15 @@ stepMess.add("Tao root");
 	/**
 	 * @param key , the key to be deleted
 	 */
-	
+
 	/*
 	 * Case 1: If k is in the node x which is a leaf and x.size -1 >= halfNumber
-	 * Case 2: If k is in the node x which is a leaf and x.size -1 <  halfNumber
-	 * Case 3: If k is in the node x and x is an internal node (not a leaf)
+	 * Case 2: If k is in the node x which is a leaf and x.size -1 < halfNumber Case
+	 * 3: If k is in the node x and x is an internal node (not a leaf)
 	 */
 	public void delete(K key) {
 		System.out.println("--------------------------------------\nDelete\n--------------------------------------");
-		stepMess.add("Cay ban dau");
+//		stepMess.add("Cay ban dau");
 		stepTrees.add(CloneUtils.clone(this));
 		// Tim kiem node chua key
 		BTNode<K> node = getNode(key);
@@ -557,7 +557,7 @@ stepMess.add("Tao root");
 		if (node.equals(root) && node.getSize() == 1 && node.isLastInternalNode()) {
 			root = null;
 			treeSize--;
-			
+
 			System.out.println("Xoa goc");
 			stepTrees.add(CloneUtils.clone(this));
 		} else {
@@ -569,7 +569,7 @@ stepMess.add("Tao root");
 				deleteNode = node;
 				isReplaced = true;
 			}
-		
+
 			// Neu xoa lam anh huong den do cao cay
 			if (node.getSize() - 1 < halfNumber) {
 //				System.out.println("Case 2:");
@@ -610,7 +610,7 @@ stepMess.add("Tao root");
 			}
 
 			if (deleteNode == null) {
-				//Ktra xem da xoa truoc do chua hay moi chi rebalance/ replace
+				// Ktra xem da xoa truoc do chua hay moi chi rebalance/ replace
 				node = getNode(key);
 			} else {
 				node = deleteNode;
@@ -624,7 +624,7 @@ stepMess.add("Tao root");
 					}
 				}
 				treeSize--;
-				
+
 				System.out.println("Xoa " + key);
 				stepTrees.add(CloneUtils.clone(this));
 			}
