@@ -11,12 +11,15 @@ import algo.LinkedList;
 import algo.Stack;
 import element.Dimensions;
 import element.Element;
+import javafx.animation.FadeTransition;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -72,7 +75,6 @@ public class Controller implements Initializable {
 	private int positionX = 10;
 	private int positionY = 150;
 
-	// private Pane NULL;
 	public int getPositionX() {
 		return positionX;
 	}
@@ -120,12 +122,8 @@ public class Controller implements Initializable {
 		});
 		comboBox.getSelectionModel().select(0);
 		speedSlider.setValue(3);
-		// NULL = drawAnimation.drawNode(0,0, "null");
-		// NULL.setLayoutX(10);
-		// NULL.setLayoutY(150);
 		insertButton.setText("Insert");
 		deleteButton.setText("Delete");
-		// mainPane.getChildren().addAll(NULL);
 		comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue.toString().compareTo("Linked List") == 0) {
 				insertButton.setText("Insert");
@@ -164,11 +162,7 @@ public class Controller implements Initializable {
 			if (comboBox.getSelectionModel().getSelectedIndex() == 0) {
 				PathTransition ptr = drawAnimation.makeAnimation(drawAnimation.makePath(positionX + Dimensions.R, 0,
 						positionX + Dimensions.R, positionY + Dimensions.R), e.getShape());
-				// PathTransition ptrNull =
-				// drawAnimation.makeAnimation(drawAnimation.makePath(Dimensions.WIDTH/2,
-				// Dimensions.HEIGHT/2,Dimensions.WIDTH, Dimensions.HEIGHT/2), NULL);
 				SequentialTransition seqtr = new SequentialTransition();
-				// System.out.println(NULL.getLayoutX()+" "+NULL.getLayoutY());
 				seqtr.getChildren().addAll(ptr);
 				seqtr.play();
 				mainPane.getChildren().addAll(e.getShape());
@@ -176,9 +170,6 @@ public class Controller implements Initializable {
 				e.setPositionY(positionY);
 				linkedList.insert(e);
 				positionX = positionX + Dimensions.R * 3;
-				// drawAnimation.updatePosition(NULL, NULL.getLayoutX()+Dimensions.WIDTH*1.5,
-				// NULL.getLayoutY());
-				// System.out.println(NULL.getLayoutX()+" "+NULL.getLayoutY());
 			} else if (comboBox.getSelectionModel().getSelectedIndex() == 1) {
 				positionX = 150;
 				stack.insert(value);
@@ -203,20 +194,47 @@ public class Controller implements Initializable {
 				int i = 0;
 				ArrayList<Integer> arrayList;
 				arrayList = linkedList.toArrayList();
+				SequentialTransition seqtr = new SequentialTransition();
+				ArrayList<FadeTransition> fadeList = new ArrayList<FadeTransition>();
 				while (i < arrayList.size()) {
 					if (arrayList.get(i) == value) {
 						break;
 					}
+					FadeTransition ftr = new FadeTransition(Duration.millis(500),mainPane.getChildren().get(i));
+					ftr.setFromValue(1.0);
+					ftr.setToValue(0.3);
+					ftr.setCycleCount(2);
+					ftr.setAutoReverse(true);
+					fadeList.add(ftr);
 					i = i + 1;
 				}
 				if (linkedList.search(value) == true) {
-					linkedList.delete(value);
-					mainPane.getChildren().remove(i);
-					System.out.println(linkedList.getLength());
-					for (int j = i; j < linkedList.getLength(); j++) {
-						double x = mainPane.getChildren().get(j).getTranslateX();
-						mainPane.getChildren().get(j).setTranslateX(x - Dimensions.R * 3);
+					for(int j=0;j<fadeList.size();j++){
+						seqtr.getChildren().add(fadeList.get(j));
 					}
+					ScaleTransition scaleTrans = new ScaleTransition();
+					scaleTrans.setByY(0.4);
+					scaleTrans.setByX(0.4);
+					scaleTrans.setDuration(Duration.millis(500));
+					scaleTrans.setCycleCount(2);
+					scaleTrans.setAutoReverse(true);
+					scaleTrans.setNode(mainPane.getChildren().get(i));
+					seqtr.getChildren().add(scaleTrans);
+					seqtr.play();
+					seqtr.setOnFinished(new EventHandler<ActionEvent>() {
+						
+						@Override
+						public void handle(ActionEvent event) {
+							linkedList.delete(value);
+							mainPane.getChildren().remove(fadeList.size());
+							System.out.println(linkedList.getLength());
+							for (int j = fadeList.size(); j < linkedList.getLength(); j++) {
+								double x = mainPane.getChildren().get(j).getTranslateX();
+								mainPane.getChildren().get(j).setTranslateX(x - Dimensions.R * 3);
+							}							
+						}
+					});
+					
 					positionX = positionX - Dimensions.R * 3;
 					textArea.setText("Delete element " + value + " successfully");
 				} else {
@@ -253,19 +271,37 @@ public class Controller implements Initializable {
 			int flag = 0;
 			ArrayList<Integer> arrayList;
 			if (comboBox.getSelectionModel().getSelectedIndex() == 0) {
+				SequentialTransition seqtr = new SequentialTransition();
+				ArrayList<FadeTransition> fadeList = new ArrayList<FadeTransition>();
 				i = 0;
 				arrayList = linkedList.toArrayList();
 				while (i < arrayList.size()) {
 					if (arrayList.get(i) == value) {
 						flag = 1;
 						break;
-					}
+					}		
+					FadeTransition ftr = new FadeTransition(Duration.millis(500),mainPane.getChildren().get(i));
+					ftr.setFromValue(1.0);
+					ftr.setToValue(0.5);
+					ftr.setCycleCount(2);
+					ftr.setAutoReverse(true);
+					fadeList.add(ftr);
 					i = i + 1;
 				}
+				
 				if (flag == 1) {
+					for(int j =0;j< fadeList.size();j++){
+						seqtr.getChildren().add(fadeList.get(j));
+					}
 					textArea.setText("Element " + value + " found");
-					double x = mainPane.getChildren().get(i).getTranslateX();
-					double y = mainPane.getChildren().get(i).getTranslateY();
+					ScaleTransition scaleTrans = new ScaleTransition();
+					scaleTrans.setByY(0.4);
+					scaleTrans.setByX(0.4);
+					scaleTrans.setDuration(Duration.millis(500));
+					scaleTrans.setCycleCount(2);
+					scaleTrans.setAutoReverse(true);
+					scaleTrans.setNode(mainPane.getChildren().get(i));
+					
 					RotateTransition rotate = new RotateTransition();
 					rotate.setAxis(Rotate.Z_AXIS);
 					rotate.setByAngle(360);
@@ -273,23 +309,34 @@ public class Controller implements Initializable {
 					rotate.setDuration(Duration.millis(1000));
 					rotate.setDelay(Duration.millis(500));
 					rotate.setNode(mainPane.getChildren().get(i));
-					rotate.play();
+					
+					seqtr.getChildren().addAll(scaleTrans,rotate);
+					seqtr.play();
 				} else
 					textArea.setText("Element " + value + " not found");
 			} else if (comboBox.getSelectionModel().getSelectedIndex() == 1) {
 				i = 0;
 				arrayList = stack.toArrayList();
+				SequentialTransition seqtr = new SequentialTransition();
+				ArrayList<FadeTransition> fadeList = new ArrayList<FadeTransition>();
 				while (i < arrayList.size()) {
 					if (arrayList.get(i) == value) {
 						flag = 1;
 						break;
 					}
+					FadeTransition ftr = new FadeTransition(Duration.millis(500),mainPane.getChildren().get(stack.getLength()-1-i));
+					ftr.setFromValue(1.0);
+					ftr.setToValue(0.5);
+					ftr.setCycleCount(2);
+					ftr.setAutoReverse(true);
+					fadeList.add(ftr);
 					i = i + 1;
 				}
 				if (flag == 1) {
+					for(int j =0;j< fadeList.size();j++){
+						seqtr.getChildren().add(fadeList.get(j));
+					}
 					textArea.setText("Element " + value + " found");
-					double x = mainPane.getChildren().get(stack.getLength() - 1 - i).getTranslateX();
-					double y = mainPane.getChildren().get(stack.getLength() - 1 - i).getTranslateY();
 					RotateTransition rotate = new RotateTransition();
 					rotate.setAxis(Rotate.Z_AXIS);
 					rotate.setByAngle(360);
@@ -297,7 +344,17 @@ public class Controller implements Initializable {
 					rotate.setDuration(Duration.millis(1000));
 					rotate.setDelay(Duration.millis(500));
 					rotate.setNode(mainPane.getChildren().get(stack.getLength() - 1 - i));
-					rotate.play();
+					
+					ScaleTransition scaleTrans = new ScaleTransition();
+					scaleTrans.setByY(0.4);
+					scaleTrans.setByX(0.4);
+					scaleTrans.setDuration(Duration.millis(500));
+					scaleTrans.setCycleCount(2);
+					scaleTrans.setAutoReverse(true);
+					scaleTrans.setNode(mainPane.getChildren().get(stack.getLength()-1-i));
+					
+					seqtr.getChildren().addAll(scaleTrans,rotate);
+					seqtr.play();
 				} else
 					textArea.setText("Element " + value + " not found");
 			}
