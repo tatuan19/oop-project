@@ -41,7 +41,7 @@ public class BTreePane extends Pane {
 		rect.setFill(color);
 		rect.setStroke(Color.WHITESMOKE);
 		rect.setArcHeight(10); rect.setArcWidth(10);
-		Text txt = new Text(x + 11 - s.length() , y + 20, s);
+		Text txt = new Text(x + 11 - s.length(), y + 20, s);
 		txt.setFill(Color.WHITE);
 		txt.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, fontSize));
 		this.getChildren().addAll(rect, txt);
@@ -63,12 +63,12 @@ public class BTreePane extends Pane {
 					double startX2 = 0, endX = 0;
 
 					if ((double) i > ((double) root.getSize()) / 2) {
-						// TODO: nen tao 1 ham de tinh do rong cua cay con roi cong voi middle
+						// TODO: fix
 						startX2 = startX
-								+ (bTree.getOrder() - 1) * bTree.getHeight(root.getChild(i)) * rectangleWidth / 2;
+								+ (bTree.getOrder() - 1) * (bTree.getHeight(root.getChild(i))-1) * rectangleWidth / 2;
 						endX = startX2 + ((double) root.getChild(i).getSize()) / 2 * rectangleWidth;
 					} else if ((double) i < ((double) root.getSize()) / 2) {
-						endX = startX - (bTree.getOrder() - 1) * bTree.getHeight(root.getChild(i)) * rectangleWidth / 2
+						endX = startX - (bTree.getOrder() - 1) * (bTree.getHeight(root.getChild(i))-1) * rectangleWidth / 2
 								- ((double) root.getChild(i).getSize()) / 2 * rectangleWidth;
 						startX2 = endX - ((double) root.getChild(i).getSize()) / 2 * rectangleWidth;
 					} else {
@@ -77,11 +77,11 @@ public class BTreePane extends Pane {
 					}
 					// Chu y trong truong hop temp tree
 					if (i == 0) {
-						startX2 -= rectangleWidth / 2;
-						endX -= rectangleWidth / 2;
+						startX2 -= rectangleWidth * 2;
+						endX -= rectangleWidth * 2;
 					} else if (i == root.getSize()) {
-						startX2 += rectangleWidth / 2;
-						endX += rectangleWidth / 2;
+						startX2 += rectangleWidth * 2;
+						endX += rectangleWidth * 2;
 					}
 
 					// Draw child nodes
@@ -106,23 +106,22 @@ public class BTreePane extends Pane {
 			while (!currentNode.equals(bTree.nullBTNode)) {
 				int i = 0;
 				while (i < currentNode.getSize()) {
-//					DrawNode(currentNode.getKey(i).toString(), x, y, Color.RED);
 					makeNodeAnimation(currentNode.getKey(i).toString(), x, y, delay);
 					delay+= 1;
-					// key can tim
+					// so sanh voi key can tim
 					if (currentNode.getKey(i).equals(key)) {
 						return;
 					} else if (currentNode.getKey(i).compareTo(key) > 0) {
 						// di xuong key ben trai
 						y += rowSpace;
 						if ((double) i < ((double) currentNode.getSize()) / 2) {
-							x = x - (bTree.getOrder() - 1) * bTree.getHeight(currentNode.getChild(i)) * rectangleWidth
+							x = x - (bTree.getOrder() - 1) * (bTree.getHeight(currentNode.getChild(i))-1) * rectangleWidth
 									/ 2 - ((double) currentNode.getChild(i).getSize()) * rectangleWidth;
 						} else {
 							x = x - ((double) currentNode.getChild(i).getSize()) / 2 * rectangleWidth;
 						}
 						if (i == 0) {
-							x -= rectangleWidth / 2;
+							x -= rectangleWidth * 2;
 						}
 
 						currentNode = currentNode.getChild(i);
@@ -136,8 +135,8 @@ public class BTreePane extends Pane {
 				// di xuong key ben phai cua node
 				if (!currentNode.isNull()) {
 					y += rowSpace;
-					x = x + (bTree.getOrder() - 1) * bTree.getHeight(currentNode.getChild(i)) * rectangleWidth / 2
-							+ rectangleWidth / 2;
+					x = x + (bTree.getOrder() - 1) * (bTree.getHeight(currentNode.getChild(i))-1) * rectangleWidth / 2
+							+ rectangleWidth * 2;
 
 					currentNode = currentNode.getChild(currentNode.getSize());
 				}
@@ -157,7 +156,7 @@ public class BTreePane extends Pane {
 		rect.setFill(Color.web("#6ab5ff"));
 		rect.setStroke(Color.WHITESMOKE);
 		rect.setArcHeight(10); rect.setArcWidth(10);
-		Text txt = new Text(x + 10, y + 20, s);
+		Text txt = new Text(x + 11 - s.length(), y + 20, s);
 		txt.setFill(Color.WHITE);
 		txt.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, fontSize));
 		this.getChildren().addAll(rect, txt);
