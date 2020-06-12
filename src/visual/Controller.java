@@ -365,7 +365,7 @@ public class Controller implements Initializable {
 	public void handleBtOpen() {
 		BTWindow btWindow = new BTWindow(720, 360);
 		Scene secondScene = new Scene(btWindow, 720, 360);
-//		secondScene.getStylesheets().add(getClass().getResource("Styles.css").toExternalForm());
+		secondScene.getStylesheets().add(getClass().getResource("BtreeStyle.css").toExternalForm());
 		
 		// New window (Stage)
 		Stage newWindow = new Stage();
@@ -380,8 +380,8 @@ public class Controller implements Initializable {
 		newWindow.initOwner(parent);
 
 		// Set position of second window, related to primary window.
-		newWindow.setX(parent.getX() + 200);
-		newWindow.setY(parent.getY() + 100);
+		newWindow.setX(parent.getX());
+		newWindow.setY(parent.getY());
 
 		newWindow.show();
 		btWindow.run();

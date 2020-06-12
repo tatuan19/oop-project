@@ -7,6 +7,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -15,8 +17,8 @@ public class BTreePane extends Pane {
 	private double originalX, originalY;
 	
 	// TODO: make node size relate to pane's size
-	private final int fontSize = 12;
-	private final int rectangleWidth = 40;
+	private final int fontSize = 14;
+	private final int rectangleWidth = 30;
 	private final int rowSpace = 60;
 
 	public BTreePane(double x, double y, BTree<Integer> bTree) {
@@ -35,17 +37,21 @@ public class BTreePane extends Pane {
 	}
 
 	private void DrawNode(String s, double x, double y, Color color) {
-		Rectangle rect = new Rectangle(x, y, rectangleWidth, 2 * fontSize);
+		Rectangle rect = new Rectangle(x, y, rectangleWidth, rectangleWidth);
 		rect.setFill(color);
-		rect.setStroke(Color.BLACK);
-		this.getChildren().addAll(rect, new Text(x + 15, y + 15, s));
+		rect.setStroke(Color.WHITESMOKE);
+		rect.setArcHeight(10); rect.setArcWidth(10);
+		Text txt = new Text(x + 11 - s.length() , y + 20, s);
+		txt.setFill(Color.WHITE);
+		txt.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, fontSize));
+		this.getChildren().addAll(rect, txt);
 	}
 
 	private void DrawBTree(BTNode<Integer> root, double x, double y) {
 		if (root != null) {
 			// Draw keys of node
 			for (int i = 0; i < root.getSize(); i++) {
-				DrawNode(root.getKey(i).toString(), x + i * rectangleWidth, y, Color.LIGHTSEAGREEN);
+				DrawNode(root.getKey(i).toString(), x + i * rectangleWidth, y, Color.web("#6ab5ff"));
 			}
 			// Draw line
 			double startY = y + 2 * fontSize;
@@ -79,8 +85,12 @@ public class BTreePane extends Pane {
 					}
 
 					// Draw child nodes
-					if (!root.getChild(i).isNull())
-						this.getChildren().add(new Line(startX, startY, endX, y + rowSpace));
+					if (!root.getChild(i).isNull()) {
+						Line line = new Line(startX, startY, endX, y + rowSpace);
+						line.setStroke(Color.SILVER);
+						line.setStrokeWidth(1.5);
+						this.getChildren().add(line);
+					}
 					DrawBTree(root.getChild(i), startX2, y + rowSpace);
 				}
 			}
@@ -92,13 +102,13 @@ public class BTreePane extends Pane {
 		if (!bTree.isEmpty()) {
 			BTNode<Integer> currentNode = bTree.getRoot();
 			double x = originalX, y = originalY;
-			int delay = 0;
+			double delay = 0;
 			while (!currentNode.equals(bTree.nullBTNode)) {
 				int i = 0;
 				while (i < currentNode.getSize()) {
 //					DrawNode(currentNode.getKey(i).toString(), x, y, Color.RED);
 					makeNodeAnimation(currentNode.getKey(i).toString(), x, y, delay);
-					delay++;
+					delay+= 1;
 					// key can tim
 					if (currentNode.getKey(i).equals(key)) {
 						return;
@@ -141,12 +151,16 @@ public class BTreePane extends Pane {
 	 */
 
 	// TODO: refactor
-	private void makeNodeAnimation(String s, double x, double y, int delay) {
+	private void makeNodeAnimation(String s, double x, double y, double delay) {
 		// Draw a node
-		Rectangle rect = new Rectangle(x, y, rectangleWidth, 2 * fontSize);
-		rect.setFill(Color.LIGHTSEAGREEN);
-		rect.setStroke(Color.BLACK);
-		this.getChildren().addAll(rect, new Text(x + 15, y + 15, s));
+		Rectangle rect = new Rectangle(x, y, rectangleWidth, rectangleWidth);
+		rect.setFill(Color.web("#6ab5ff"));
+		rect.setStroke(Color.WHITESMOKE);
+		rect.setArcHeight(10); rect.setArcWidth(10);
+		Text txt = new Text(x + 10, y + 20, s);
+		txt.setFill(Color.WHITE);
+		txt.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, fontSize));
+		this.getChildren().addAll(rect, txt);
 		
 		// make fill transition
 		FillTransition fill = new FillTransition();
@@ -155,8 +169,8 @@ public class BTreePane extends Pane {
 		fill.setCycleCount(1);
 		fill.setDelay(Duration.seconds(delay));
 		fill.setDuration(Duration.seconds(1));
-		fill.setFromValue(Color.LIGHTSEAGREEN);
-		fill.setToValue(Color.RED);
+		fill.setFromValue(Color.web("#6ab5ff"));
+		fill.setToValue(Color.web("#f57f7f"));
 		fill.setShape(rect);  
 		fill.play(); 
 	}

@@ -20,7 +20,7 @@ public class BTWindow extends BorderPane {
 	private int key;
 	private BTreePane btPane;
 	private TextField keyText = new TextField();
-	private Button previousButton = new Button("Previous");
+	private Button previousButton = new Button("Prev");
 	private Button nextButton = new Button("Next");
 
 	private int index = 0;
@@ -46,6 +46,7 @@ public class BTWindow extends BorderPane {
 		Button deleteButton = new Button("Delete");
 		Button searchButton = new Button("Search");
 		Button resetButton = new Button("Reset");
+		resetButton.setId("reset");
 		resetButton.setStyle("-fx-base: red;");
 		Label nullLabel = new Label();
 		nullLabel.setPrefWidth(30);
